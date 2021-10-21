@@ -1,0 +1,7 @@
+###> .idea/PhpStorm ####
+.idea
+###< .idea/PhpStorm ####
+
+###> vendor ####
+vendor
+###< vendor ####

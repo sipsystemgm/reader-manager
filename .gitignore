@@ -5,3 +5,7 @@
 ###> vendor ####
 vendor
 ###< vendor ####
+
+###> storage ####
+storage/*
+###< storage ####

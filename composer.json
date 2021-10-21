@@ -4,7 +4,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Sipsystemgm\\ReaderManager\\": "src/"
+            "Sip\\ReaderManager\\": "src/",
+            "Sip\\ReaderManager\\Test\\": "test/"
         }
     },
     "authors": [
@@ -14,5 +15,11 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "sipsystemgm/image-parser": "^1.2",
+        "sipsystemgm/reader": "^1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
 }

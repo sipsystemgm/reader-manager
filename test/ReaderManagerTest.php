@@ -16,6 +16,8 @@ use Sip\ReaderManager\FileStorage;
  */
 class ReaderManagerTest extends TestCase
 {
+    private const HOST = "http://localhost:8000";
+
     public function testRun4LevelDeeps(): void
     {
         $this->runManagerByDeep(4);
@@ -29,12 +31,16 @@ class ReaderManagerTest extends TestCase
     public function testRunUserFunction(): void
     {
         $manager = $this->getManager($this->getStorage());
-        $manager->run("http://localhost:8000", "/", function (
-            ImageParserInterface $parser, ReaderManagerInterface $readerManager,
-            int $index
-        ) {
+
+        $readDataUserFunction = function (ImageParserInterface $parser, ReaderManagerInterface $readerManager) {
             $this->assertEquals(1, $readerManager->getDeep());
-        });
+        };
+
+        $options = [
+            'afterRead' => $readDataUserFunction
+        ];
+
+        $manager->run(self::HOST, "/", $options);
     }
 
     private function runManagerByDeep(int $deep): void
@@ -42,8 +48,7 @@ class ReaderManagerTest extends TestCase
         $storage = $this->getStorage();
         $this->getManager($storage)
             ->setMaxDeep($deep)
-            ->run("http://localhost:8000", "/");
-
+            ->run(self::HOST, "/");
         $this->assertEquals($deep, $storage->getCurrentDeep());
         $this->assertEquals($deep, count($storage->getUrls()));
     }

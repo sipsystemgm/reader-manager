@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "sipsystemgm/image-parser",
-            "version": "1.2.2",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sipsystemgm/image-parser.git",
-                "reference": "dc5de6b35c26ab6622409237121a7016950f8e81"
+                "reference": "5850ed131573b343f7247f69627c305cefa472b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sipsystemgm/image-parser/zipball/dc5de6b35c26ab6622409237121a7016950f8e81",
-                "reference": "dc5de6b35c26ab6622409237121a7016950f8e81",
+                "url": "https://api.github.com/repos/sipsystemgm/image-parser/zipball/5850ed131573b343f7247f69627c305cefa472b7",
+                "reference": "5850ed131573b343f7247f69627c305cefa472b7",
                 "shasum": ""
             },
             "require": {
@@ -47,9 +47,9 @@
             "description": "Symfony Image Parser",
             "support": {
                 "issues": "https://github.com/sipsystemgm/image-parser/issues",
-                "source": "https://github.com/sipsystemgm/image-parser/tree/1.2.2"
+                "source": "https://github.com/sipsystemgm/image-parser/tree/1.2.3"
             },
-            "time": "2021-10-19T20:46:05+00:00"
+            "time": "2021-10-21T12:06:32+00:00"
         },
         {
             "name": "sipsystemgm/reader",

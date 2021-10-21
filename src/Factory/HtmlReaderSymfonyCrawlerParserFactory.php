@@ -20,7 +20,7 @@ class HtmlReaderSymfonyCrawlerParserFactory implements AbstractFactoryInterface
 
     public function createReader(): \Iterator
     {
-        return new ReadFromFile($this->url, 4069);
+        return new ReadFromFile($this->url, 10);
     }
 
     public function createParser(): ImageParserInterface

@@ -2,6 +2,7 @@
 
 namespace Sip\ReaderManager;
 
+use Sip\ImageParser\Interfaces\ImageParserInterface;
 use Sip\ReaderManager\Interfaces\ReaderManagerInterface;
 use Sip\ReaderManager\Interfaces\ReaderStorageInterface;
 use Sip\ReaderManager\Factory\HtmlReaderSymfonyCrawlerParserFactory;
@@ -19,38 +20,34 @@ class ReaderManager implements ReaderManagerInterface
         $this->readerStorage = $readerStorage;
     }
 
-    public function run(string $domain, string $url, ?callable $itemUserFunction = null): void
+    public function run(string $domain, string $url, array $options = []): ?ImageParserInterface
     {
-        if ($this->readerStorage->isUrlLoaded($url)
-            || ($this->maxDeep > 0 && $this->maxDeep <= $this->readerStorage->getCurrentDeep())
-            || ($this->maxPages > 0 && $this->maxPages <= $this->readerStorage->getSavedLength())
-        ) {
-            return;
+        if ($this->isRun($url)) {
+            return null;
         }
 
         $readerParser = new HtmlReaderSymfonyCrawlerParserFactory($domain . $url);
         $parser = $readerParser->createParser();
         $this->saveDataInStorage($url);
+        $html = '';
 
-        foreach ($readerParser->createReader() as $index => $itemHtml) {
-            $itemHtml_ = preg_replace('/\s+$/', '', $itemHtml);
-            if (strrpos($itemHtml_, '>') === false
-                || strrpos($itemHtml_, '>') + 1 != strlen($itemHtml_)) {
-                continue;
-            }
-
-            $parser->setHtml($itemHtml_);
-            if ($itemUserFunction !== null) {
-                $itemUserFunction($parser, $this, $index);
-                continue;
-            }
-
-            foreach ($parser->getLinks() as $link) {
-                $link = str_replace($domain, '', $link);
-                $this->setDeep($this->deep + 1);
-                $this->run($domain, $link);
-            }
+        foreach ($readerParser->createReader() as $itemHtml) {
+            $html .= preg_replace('/\s{2,}|\t{2,}+/', ' ', $itemHtml);
         }
+
+        $parser->setHtml($html);
+        if (!empty($options['afterRead']) && is_callable($options['afterRead'])) {
+            $options['afterRead']($parser, $this);
+            return $parser;
+        }
+
+        foreach ($parser->getLinks() as $link) {
+            $link = str_replace([$domain, ' '], '', $link);
+            $this->setDeep($this->deep + 1);
+            $this->run($domain, $link);
+        }
+
+        return $parser;
     }
 
     public function setMaxDeep(int $maxDeep): self
@@ -82,6 +79,14 @@ class ReaderManager implements ReaderManagerInterface
         $this->readerStorage->setCurrentDeep($this->deep);
         $this->readerStorage->addUrls([$url]);
         $this->readerStorage->save();
+    }
+
+    private function isRun(string $url): bool
+    {
+        return ($this->readerStorage->isUrlLoaded($url)
+            || ($this->maxDeep > 0 && $this->maxDeep <= $this->readerStorage->getCurrentDeep())
+            || ($this->maxPages > 0 && $this->maxPages <= $this->readerStorage->getSavedLength())
+        );
     }
 }
 

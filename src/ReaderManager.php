@@ -28,31 +28,27 @@ class ReaderManager implements ReaderManagerInterface
             return;
         }
 
-        $readerParser = new HtmlReaderSymfonyCrawlerParserFactory($domain .$url);
+        $readerParser = new HtmlReaderSymfonyCrawlerParserFactory($domain . $url);
         $parser = $readerParser->createParser();
-
-        $this->readerStorage->saveLength();
-        $this->readerStorage->setCurrentDeep($this->deep);
-        $this->readerStorage->addUrls([$url]);
-        $this->readerStorage->save();
+        $this->saveDataInStorage($url);
 
         foreach ($readerParser->createReader() as $index => $itemHtml) {
-
             $itemHtml_ = preg_replace('/\s+$/', '', $itemHtml);
+            if (strrpos($itemHtml_, '>') === false
+                || strrpos($itemHtml_, '>') + 1 != strlen($itemHtml_)) {
+                continue;
+            }
 
-            if (strrpos($itemHtml_, '>') !== false
-                && strrpos($itemHtml_, '>') + 1  == strlen($itemHtml_)) {
+            $parser->setHtml($itemHtml_);
+            if ($itemUserFunction !== null) {
+                $itemUserFunction($parser, $this, $index);
+                continue;
+            }
 
-                $parser->setHtml($itemHtml_);
-                if ($itemUserFunction !== null) {
-                    $itemUserFunction($parser, $this, $index);
-                } else {
-                    foreach ($parser->getLinks() as $link) {
-                        $link = str_replace($domain, '', $link);
-                        $this->setDeep($this->deep + 1);
-                        $this->run($domain, $link);
-                    }
-                }
+            foreach ($parser->getLinks() as $link) {
+                $link = str_replace($domain, '', $link);
+                $this->setDeep($this->deep + 1);
+                $this->run($domain, $link);
             }
         }
     }
@@ -78,6 +74,14 @@ class ReaderManager implements ReaderManagerInterface
     public function getDeep(): int
     {
         return $this->deep;
+    }
+
+    private function saveDataInStorage(string $url): void
+    {
+        $this->readerStorage->saveLength();
+        $this->readerStorage->setCurrentDeep($this->deep);
+        $this->readerStorage->addUrls([$url]);
+        $this->readerStorage->save();
     }
 }
 

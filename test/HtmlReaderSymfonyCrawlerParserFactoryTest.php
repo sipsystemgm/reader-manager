@@ -18,7 +18,6 @@ class HtmlReaderSymfonyCrawlerParserFactoryTest extends TestCase
     {
         $wrongUrl = '/some-page.html';
         $readerParser = new HtmlReaderSymfonyCrawlerParserFactory($wrongUrl);
-
         try {
             $this->assertInstanceOf(ImageParserInterface::class, $readerParser->createParser());
         } catch (\Throwable $exception) {

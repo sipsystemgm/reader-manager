@@ -20,24 +20,19 @@ class HtmlReaderSymfonyCrawlerParserFactory implements AbstractFactoryInterface
 
     public function createReader(): \Iterator
     {
-        $reader = new ReadFromFile($this->url, 4069);
-        return $reader;
+        return new ReadFromFile($this->url, 4069);
     }
 
     public function createParser(): ImageParserInterface
     {
         $parsedUrl = parse_url($this->url);
-
         if (empty($parsedUrl['host'])) {
             throw new \Exception(sprintf(self::ERROR_HOST_MESSAGE, $this->url));
         }
-
         $validator = new TagUrlValidator($parsedUrl['host']);
         $parser = new SymfonyCrawlerParser();
-
         $parser->addTagValidators('src', $validator);
         $parser->addTagValidators('href', $validator);
-
         return $parser;
     }
 }

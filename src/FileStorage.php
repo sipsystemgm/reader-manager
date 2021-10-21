@@ -2,8 +2,6 @@
 
 namespace Sip\ReaderManager;
 
-use Sip\ReaderManager\Interfaces\ReaderStorageInterface;
-
 class FileStorage extends AbstractStorage
 {
     public function __construct(string $name)

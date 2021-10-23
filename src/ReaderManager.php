@@ -61,12 +61,7 @@ class ReaderManager implements ReaderManagerInterface
             return $parser;
         }
 
-        $url_ = !empty($parsedUrl['scheme']) ?
-            $parsedUrl['scheme'] .
-            '://'.
-            $parsedUrl['host'] .
-            (!empty($parsedUrl['port']) ? ':'.$parsedUrl['port'] : '')
-            : '';
+        $url_ = $this->getDomainFromUrl($url);
 
         foreach ($parser->getLinks() as $link) {
             $link = $url_ .$link;
@@ -74,6 +69,17 @@ class ReaderManager implements ReaderManagerInterface
             $this->run($link);
         }
         return $parser;
+    }
+
+    public function getDomainFromUrl(string $url): string
+    {
+        $parsedUrl = parse_url($url);
+        return !empty($parsedUrl['scheme']) ?
+            $parsedUrl['scheme'] .
+            '://'.
+            $parsedUrl['host'] .
+            (!empty($parsedUrl['port']) ? ':'.$parsedUrl['port'] : '')
+            : '';
     }
 
     public function setMaxDeep(int $maxDeep): self

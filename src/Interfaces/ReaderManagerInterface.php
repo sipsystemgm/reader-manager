@@ -10,6 +10,8 @@ interface ReaderManagerInterface
 
     public function run(string $url, array $options = []): ?ImageParserInterface;
 
+    public function getDomainFromUrl(string $url): string;
+
     public function setMaxDeep(int $maxDeep): self;
 
     public function setMaxPages(int $maxPages): self;

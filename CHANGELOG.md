@@ -1,3 +1,7 @@
+1.4.2
+
+* change [ReaderManager] created function returns a scheme and domain from url;
+
 1.4.1
 
 * remove [ReaderManager] first argument $domain in function ReaderManagerInterface::run

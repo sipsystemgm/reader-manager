@@ -9,7 +9,7 @@ abstract class AbstractStorage implements ReaderStorageInterface
     protected int $savedLength = 0;
     protected int $currentDeep = 0;
     protected array $urls = [];
-    protected string $storagePath;
+    protected string $storagePath =  __DIR__.'/../storage/';
 
     public function saveLength(): self
     {

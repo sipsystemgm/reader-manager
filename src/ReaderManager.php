@@ -3,6 +3,8 @@
 namespace Sip\ReaderManager;
 
 use Sip\ImageParser\Interfaces\ImageParserInterface;
+use Sip\ImageParser\TagUrlValidator;
+use Sip\ReaderManager\Interfaces\AbstractFactoryInterface;
 use Sip\ReaderManager\Interfaces\ReaderManagerInterface;
 use Sip\ReaderManager\Interfaces\ReaderStorageInterface;
 use Sip\ReaderManager\Factory\HtmlReaderSymfonyCrawlerParserFactory;
@@ -20,16 +22,39 @@ class ReaderManager implements ReaderManagerInterface
         $this->readerStorage = $readerStorage;
     }
 
+    public function getFactory(string $url): AbstractFactoryInterface
+    {
+        return new HtmlReaderSymfonyCrawlerParserFactory($url);
+    }
+
     public function run(string $domain, string $url, array $options = []): ?ImageParserInterface
     {
         if ($this->isRun($url)) {
             return null;
         }
 
-        $readerParser = new HtmlReaderSymfonyCrawlerParserFactory($domain . $url);
+        if (strpos($url, $domain) === false) {
+            $url = $domain . $url;
+        }
+
+        $urlValidator = new TagUrlValidator($domain);
+
+        if (!$urlValidator->attributeValidate($url)) {
+            return null;
+        }
+
+
+        $readerParser = $this->getFactory($url);
         $parser = $readerParser->createParser();
         $this->saveDataInStorage($url);
         $html = '';
+
+        if (!empty($options['beforeRead']) 
+            && is_callable($options['beforeRead']) 
+            && !$options['beforeRead']($parser, $this)
+        ) {
+            return $parser;
+        }
 
         foreach ($readerParser->createReader() as $itemHtml) {
             $html .= preg_replace('/\s{2,}|\t{2,}+/', ' ', $itemHtml);

@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "sipsystemgm/image-parser",
-            "version": "1.2.3",
+            "version": "1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sipsystemgm/image-parser.git",
-                "reference": "5850ed131573b343f7247f69627c305cefa472b7"
+                "reference": "f5d744912ef948fc1485486777160644d6c56fea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sipsystemgm/image-parser/zipball/5850ed131573b343f7247f69627c305cefa472b7",
-                "reference": "5850ed131573b343f7247f69627c305cefa472b7",
+                "url": "https://api.github.com/repos/sipsystemgm/image-parser/zipball/f5d744912ef948fc1485486777160644d6c56fea",
+                "reference": "f5d744912ef948fc1485486777160644d6c56fea",
                 "shasum": ""
             },
             "require": {
@@ -47,22 +47,22 @@
             "description": "Symfony Image Parser",
             "support": {
                 "issues": "https://github.com/sipsystemgm/image-parser/issues",
-                "source": "https://github.com/sipsystemgm/image-parser/tree/1.2.3"
+                "source": "https://github.com/sipsystemgm/image-parser/tree/1.3.3"
             },
-            "time": "2021-10-21T12:06:32+00:00"
+            "time": "2021-10-23T12:11:35+00:00"
         },
         {
             "name": "sipsystemgm/reader",
-            "version": "1.1.1",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sipsystemgm/reader.git",
-                "reference": "8657036bedd32f1c8e7ee51a27824d0a502be96c"
+                "reference": "d8229013d11442294ca5b203d9b876257eddb717"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sipsystemgm/reader/zipball/8657036bedd32f1c8e7ee51a27824d0a502be96c",
-                "reference": "8657036bedd32f1c8e7ee51a27824d0a502be96c",
+                "url": "https://api.github.com/repos/sipsystemgm/reader/zipball/d8229013d11442294ca5b203d9b876257eddb717",
+                "reference": "d8229013d11442294ca5b203d9b876257eddb717",
                 "shasum": ""
             },
             "require-dev": {
@@ -88,9 +88,9 @@
             "description": "This is a simple data reader",
             "support": {
                 "issues": "https://github.com/sipsystemgm/reader/issues",
-                "source": "https://github.com/sipsystemgm/reader/tree/1.1.1"
+                "source": "https://github.com/sipsystemgm/reader/tree/1.2.1"
             },
-            "time": "2021-10-20T04:52:20+00:00"
+            "time": "2021-10-23T08:30:00+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -2339,7 +2339,6 @@
                     "type": "github"
                 }
             ],
-            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {

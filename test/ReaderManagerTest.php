@@ -40,7 +40,7 @@ class ReaderManagerTest extends TestCase
             'afterRead' => $readDataUserFunction
         ];
 
-        $manager->run(self::HOST, "/", $options);
+        $manager->run(self::HOST, $options);
     }
 
     private function runManagerByDeep(int $deep): void
@@ -48,7 +48,7 @@ class ReaderManagerTest extends TestCase
         $storage = $this->getStorage();
         $this->getManager($storage)
             ->setMaxDeep($deep)
-            ->run(self::HOST, "/");
+            ->run(self::HOST);
         $this->assertEquals($deep, $storage->getCurrentDeep());
         $this->assertEquals($deep, count($storage->getUrls()));
     }

@@ -27,22 +27,18 @@ class ReaderManager implements ReaderManagerInterface
         return new HtmlReaderSymfonyCrawlerParserFactory($url);
     }
 
-    public function run(string $domain, string $url, array $options = []): ?ImageParserInterface
+    public function run(string $url, array $options = []): ?ImageParserInterface
     {
         if ($this->isRun($url)) {
             return null;
         }
-
-        if (strpos($url, $domain) === false) {
-            $url = $domain . $url;
-        }
+        $parsedUrl = parse_url($url);
+        $domain = !empty($parsedUrl['host']) ? $parsedUrl['host'] : '';
 
         $urlValidator = new TagUrlValidator($domain);
-
         if (!$urlValidator->attributeValidate($url)) {
             return null;
         }
-
 
         $readerParser = $this->getFactory($url);
         $parser = $readerParser->createParser();
@@ -57,21 +53,26 @@ class ReaderManager implements ReaderManagerInterface
         }
 
         foreach ($readerParser->createReader() as $itemHtml) {
-            $html .= preg_replace('/\s{2,}|\t{2,}+/', ' ', $itemHtml);
+            $html .= preg_replace('/\s{2,}|\t{2,}/', ' ', $itemHtml);
         }
-
         $parser->setHtml($html);
         if (!empty($options['afterRead']) && is_callable($options['afterRead'])) {
             $options['afterRead']($parser, $this);
             return $parser;
         }
 
-        foreach ($parser->getLinks() as $link) {
-            $link = str_replace([$domain, ' '], '', $link);
-            $this->setDeep($this->deep + 1);
-            $this->run($domain, $link);
-        }
+        $url_ = !empty($parsedUrl['scheme']) ?
+            $parsedUrl['scheme'] .
+            '://'.
+            $parsedUrl['host'] .
+            (!empty($parsedUrl['port']) ? ':'.$parsedUrl['port'] : '')
+            : '';
 
+        foreach ($parser->getLinks() as $link) {
+            $link = $url_ .$link;
+            $this->setDeep($this->deep + 1);
+            $this->run($link);
+        }
         return $parser;
     }
 

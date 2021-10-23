@@ -1,3 +1,8 @@
+1.4.1
+
+* remove [ReaderManager] first argument $domain in function ReaderManagerInterface::run
+* change [ReaderManagerTest] changed tests
+
 1.3.1
 
 * feature [README] new file

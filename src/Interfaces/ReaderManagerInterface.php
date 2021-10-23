@@ -8,7 +8,7 @@ interface ReaderManagerInterface
 {
     public function __construct(ReaderStorageInterface $readerStorage);
 
-    public function run(string $domain, string $url, array $options = []): ?ImageParserInterface;
+    public function run(string $url, array $options = []): ?ImageParserInterface;
 
     public function setMaxDeep(int $maxDeep): self;
 

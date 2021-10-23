@@ -31,7 +31,7 @@ abstract class AbstractStorageTest extends TestCase
 
     public function testAddUrls()
     {
-        $this->storage->addUrls([$this->testUrl]);
+        $this->storage->addUrls($this->testUrl);
         $this->assertTrue($this->storage->isUrlLoaded($this->testUrl));
     }
 
@@ -58,20 +58,30 @@ abstract class AbstractStorageTest extends TestCase
 
     public function testSave(): void
     {
-        $urls = ['one.com', 'two.com'];
+        $urls = [
+            'one.com' => ['executeTime'=>100, 'level'=>1],
+            'two.com' => ['executeTime'=>100, 'level'=>2]
+        ];
+
         $this->storage->clear();
         $this
             ->storage
             ->setCurrentDeep(1)
             ->saveLength()
-            ->addUrls($urls);
+            ->addUrls('one.com', $urls['one.com'])
+            ->addUrls('two.com', $urls['two.com']);
 
         $this->storage->save();
         $storage = clone $this->getStorage();
-
         $this->assertEquals(1, $storage->getCurrentDeep());
         $this->assertEquals(1, $storage->getSavedLength());
-        $this->assertEquals($urls, $storage->getUrls());
+
+        $urls_ = [];
+        foreach ($urls as $u => $url) {
+            $url['url'] = $u;
+            $urls_[] = $url;
+        }
+        $this->assertEquals($urls_, array_values($storage->getUrls()));
     }
 
     abstract protected function getStorage(): ReaderStorageInterface;

@@ -18,7 +18,9 @@ interface ReaderStorageInterface
 
     public function getUrls(): array;
 
-    public function addUrls(?array $urlArray): self;
+    public function getUrl(string $url): ?array;
+
+    public function addUrls(string $url, array $urlData = []): self;
 
     public function save(): self;
 

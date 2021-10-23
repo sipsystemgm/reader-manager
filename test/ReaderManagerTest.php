@@ -12,11 +12,11 @@ use Sip\ReaderManager\FileStorage;
 /*
  * Attention!!!
  * Run webserver before run this tests.
- * php -S localhost:8000
+ * php -S localhost:8156
  */
 class ReaderManagerTest extends TestCase
 {
-    private const HOST = "http://localhost:8000";
+    private const HOST = "http://localhost:8156";
 
     public function testRun4LevelDeeps(): void
     {
@@ -62,7 +62,7 @@ class ReaderManagerTest extends TestCase
 
     private function getStorage(): ReaderStorageInterface
     {
-        $storage = new FileStorage('localhost_8000.txt');
+        $storage = new FileStorage('localhost_8156.txt');
         $storage->clear();
         return $storage;
     }

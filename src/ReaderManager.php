@@ -15,7 +15,7 @@ class ReaderManager implements ReaderManagerInterface
     private ReaderStorageInterface $readerStorage;
     private int $maxDeep = 0;
     private int $maxPages = 0;
-    private int $deep = 0;
+    private int $deep = 1;
 
     public function __construct(ReaderStorageInterface $readerStorage)
     {
@@ -42,7 +42,12 @@ class ReaderManager implements ReaderManagerInterface
 
         $readerParser = $this->getFactory($url);
         $parser = $readerParser->createParser();
-        $this->saveDataInStorage($url);
+
+        $this->saveDataInStorage($url, [
+            'executionTime' => $parser->getExecutionTime(),
+            'deep' => $this->deep
+        ]);
+
         $html = '';
 
         if (!empty($options['beforeRead']) 
@@ -66,6 +71,7 @@ class ReaderManager implements ReaderManagerInterface
         foreach ($parser->getLinks() as $link) {
             $link = $url_ .$link;
             $this->setDeep($this->deep + 1);
+
             $this->run($link);
         }
         return $parser;
@@ -105,15 +111,15 @@ class ReaderManager implements ReaderManagerInterface
         return $this->deep;
     }
 
-    private function saveDataInStorage(string $url): void
+    private function saveDataInStorage(string $url, array $data): void
     {
         $this->readerStorage->saveLength();
         $this->readerStorage->setCurrentDeep($this->deep);
-        $this->readerStorage->addUrls([$url]);
+        $this->readerStorage->addUrls($url, $data);
         $this->readerStorage->save();
     }
 
-    private function isRun(string $url): bool
+    public function isRun(string $url): bool
     {
         return ($this->readerStorage->isUrlLoaded($url)
             || ($this->maxDeep > 0 && $this->maxDeep <= $this->readerStorage->getCurrentDeep())

@@ -1,6 +1,11 @@
+1.4.3
+
+* change [AbstractStorage] saving data in a storage
+* change [ReaderStorageInterface] created public function getUrl to get an url Data by an url
+
 1.4.2
 
-* change [ReaderManager] created function returns a scheme and domain from url;
+* change [ReaderManager] created function returns a scheme and domain from url
 
 1.4.1
 

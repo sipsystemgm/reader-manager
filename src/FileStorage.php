@@ -2,37 +2,24 @@
 
 namespace Sip\ReaderManager;
 
-use Sip\ReaderManager\Interfaces\ReaderStorageInterface;
-
 class FileStorage extends AbstractStorage
 {
+    protected string $storagePath =  __DIR__.'/../storage/';
+
     public function __construct(string $name)
     {
         $this->storagePath .=$name;
         if (!file_exists($this->storagePath)) {
            $this->save();
         } else {
-            $data = json_decode(file_get_contents($this->storagePath));
-            $this->savedLength = $data->savedLength;
-            $this->currentDeep = $data->currentDeep;
-            $this->urls = $data->urls;
+            $data = json_decode(file_get_contents($this->storagePath), true);
+            $this->savedLength = $data['savedLength'];
+            $this->currentDeep = $data['currentDeep'];
+            $this->urls = $data['urls'];
         }
     }
 
-    public function isUrlLoaded(string $url): bool
-    {
-        return in_array($url, $this->urls);
-    }
 
-    public function addUrls(?array $urlArray): self
-    {
-        foreach ($urlArray as $url) {
-            if (!$this->isUrlLoaded($url)) {
-                $this->urls[] = $url;
-            }
-        }
-        return $this;
-    }
     public function save(): self
     {
         file_put_contents($this->storagePath, json_encode([

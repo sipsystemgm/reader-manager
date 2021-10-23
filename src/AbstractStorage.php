@@ -9,11 +9,25 @@ abstract class AbstractStorage implements ReaderStorageInterface
     protected int $savedLength = 0;
     protected int $currentDeep = 0;
     protected array $urls = [];
-    protected string $storagePath =  __DIR__.'/../storage/';
 
     public function saveLength(): self
     {
         $this->savedLength++;
+        return $this;
+    }
+
+    public function isUrlLoaded(string $url): bool
+    {
+        return isset($this->urls[md5($url)]);
+    }
+
+    public function addUrls(string $url, array $urlData = []): self
+    {
+        if (!$this->isUrlLoaded($url)) {
+            $urlData['url'] = $url;
+            $this->urls[md5($url)] = $urlData;
+        }
+
         return $this;
     }
 
@@ -36,6 +50,15 @@ abstract class AbstractStorage implements ReaderStorageInterface
     public function getUrls(): array
     {
         return $this->urls;
+    }
+
+    public function getUrl(string $url): ?array
+    {
+        $key = md5($url);
+        if (!empty($this->urls[$key])) {
+            return $this->urls[$key];
+        }
+        return null;
     }
 
     public function clear(): self

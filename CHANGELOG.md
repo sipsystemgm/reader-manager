@@ -1,3 +1,7 @@
+1.5.1
+
+* change [ReaderManager] user function was moved inside loop in run method and renamed
+
 1.4.3
 
 * change [AbstractStorage] saving data in a storage

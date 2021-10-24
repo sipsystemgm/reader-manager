@@ -37,7 +37,7 @@ class ReaderManagerTest extends TestCase
         };
 
         $options = [
-            'afterRead' => $readDataUserFunction
+            'read' => $readDataUserFunction
         ];
 
         $manager->run(self::HOST, $options);

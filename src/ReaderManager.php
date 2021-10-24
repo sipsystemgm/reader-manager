@@ -13,6 +13,7 @@ use Sip\ReaderManager\Factory\ReaderParserFactory;
 class ReaderManager implements ReaderManagerInterface
 {
     private ReaderStorageInterface $readerStorage;
+    private ImageParserInterface $parser;
     private int $maxDeep = 0;
     private int $maxPages = 0;
     private int $deep = 1;
@@ -36,45 +37,44 @@ class ReaderManager implements ReaderManagerInterface
         $domain = !empty($parsedUrl['host']) ? $parsedUrl['host'] : '';
 
         $urlValidator = new TagUrlValidator($domain);
+
         if (!$urlValidator->attributeValidate($url)) {
             return null;
         }
 
         $readerParser = $this->getFactory($url);
-        $parser = $readerParser->createParser();
-
-        $this->saveDataInStorage($url, [
-            'executionTime' => $parser->getExecutionTime(),
-            'deep' => $this->deep
-        ]);
-
+        $this->parser = $readerParser->createParser();
         $html = '';
-
-        if (!empty($options['beforeRead']) 
-            && is_callable($options['beforeRead']) 
-            && !$options['beforeRead']($parser, $this)
-        ) {
-            return $parser;
-        }
 
         foreach ($readerParser->createReader() as $itemHtml) {
             $html .= preg_replace('/\s{2,}|\t{2,}/', ' ', $itemHtml);
         }
-        $parser->setHtml($html);
-        if (!empty($options['afterRead']) && is_callable($options['afterRead'])) {
-            $options['afterRead']($parser, $this);
-            return $parser;
-        }
-
+        $this->parser->setHtml($html);
+        $this->saveDataInStorage($url);
         $url_ = $this->getDomainFromUrl($url);
+        $deep = $this->deep;
 
-        foreach ($parser->getLinks() as $link) {
-            $link = $url_ .$link;
-            $this->setDeep($this->deep + 1);
-
-            $this->run($link);
+        foreach ($this->parser->getLinks() as $url) {
+            $url = $this->cleanUrl($url, $url_);
+            if (!empty($options['read']) && is_callable($options['read'])) {
+                if (!$options['read']($this->parser, $this, $url)) {
+                    break;
+                }
+            } else {
+                $this->setDeep($deep + 1);
+                $this->run($url);
+            }
         }
-        return $parser;
+        return $this->parser;
+    }
+
+    private function cleanUrl(string $url, string $domain): string
+    {
+        if (strpos($url, $domain) === false) {
+            $url = $domain . $url;
+        }
+        $url = preg_replace('/\/+$/', '', $url);
+        return $url;
     }
 
     public function getDomainFromUrl(string $url): string
@@ -111,11 +111,16 @@ class ReaderManager implements ReaderManagerInterface
         return $this->deep;
     }
 
-    private function saveDataInStorage(string $url, array $data): void
+    private function saveDataInStorage(string $url): void
     {
         $this->readerStorage->saveLength();
         $this->readerStorage->setCurrentDeep($this->deep);
-        $this->readerStorage->addUrls($url, $data);
+        $this->readerStorage->addUrls($url,
+            [
+                'executionTime' => $this->parser->getExecutionTime(),
+                'deep' => $this->deep
+            ]
+        );
         $this->readerStorage->save();
     }
 

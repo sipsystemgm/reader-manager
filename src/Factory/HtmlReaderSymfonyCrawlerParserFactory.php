@@ -23,16 +23,21 @@ class HtmlReaderSymfonyCrawlerParserFactory implements AbstractFactoryInterface
         return new ReadFromFile($this->url, 10);
     }
 
-    public function createParser(): ImageParserInterface
+    public function createParser(bool $isHrefSubDomain = false, bool $isImgSubDomain = false): ImageParserInterface
     {
         $parsedUrl = parse_url($this->url);
         if (empty($parsedUrl['host'])) {
             throw new \Exception(sprintf(self::ERROR_HOST_MESSAGE, $this->url));
         }
-        $validator = new TagUrlValidator($parsedUrl['host']);
+        $hrefValidator = new TagUrlValidator($parsedUrl['host']);
+        $hrefValidator->setIsValidSubdomain($isHrefSubDomain);
+
+        $srcValidator = new TagUrlValidator($parsedUrl['host']);
+        $srcValidator->setIsValidSubdomain($isImgSubDomain);
+
         $parser = new SymfonyCrawlerParser();
-        $parser->addTagValidators('src', $validator);
-        $parser->addTagValidators('href', $validator);
+        $parser->addTagValidators('href', $hrefValidator);
+        $parser->addTagValidators('src', $srcValidator);
         return $parser;
     }
 }

@@ -1,3 +1,7 @@
+2.2.1
+
+* feature [AbstractFactoryInterface, ReaderManagerInterface] was added parameters to test subdomain
+
 2.1.1
 
 * feature [ReaderStorageInterface] seperated to ReaderFilterStorageInterface and ReadCacheInterface

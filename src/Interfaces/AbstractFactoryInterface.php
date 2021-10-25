@@ -8,5 +8,5 @@ interface AbstractFactoryInterface
 {
     public function createReader(): \Iterator;
 
-    public function createParser(): ImageParserInterface;
+    public function createParser(bool $isHrefSubDomain = false, bool $isImgSubDomain = false): ImageParserInterface;
 }

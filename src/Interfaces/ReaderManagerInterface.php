@@ -20,4 +20,12 @@ interface ReaderManagerInterface
 
     public function getDeep(): int;
 
+    public function isNoHrefSubDomain(): bool;
+
+    public function setIsNoHrefSubDomain(bool $isNoHrefSubDomain): self;
+
+    public function isNoImageSubDomain(): bool;
+
+    public function setIsNoImageSubDomain(bool $isNoImageSubDomain): self;
+
 }

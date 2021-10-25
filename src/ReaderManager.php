@@ -17,6 +17,8 @@ class ReaderManager implements ReaderManagerInterface
     private int $maxDeep = 0;
     private int $maxPages = 0;
     private int $deep = 1;
+    private bool $isNoHrefSubDomain = false;
+    private bool $isNoImageSubDomain = false;
 
     public function __construct(ReaderStorageInterface $readerStorage)
     {
@@ -43,12 +45,13 @@ class ReaderManager implements ReaderManagerInterface
         }
 
         $readerParser = $this->getFactory($url);
-        $this->parser = $readerParser->createParser();
+        $this->parser = $readerParser->createParser($this->isNoHrefSubDomain(), $this->isNoImageSubDomain());
         $html = '';
 
         foreach ($readerParser->createReader() as $itemHtml) {
             $html .= preg_replace('/\s{2,}|\t{2,}/', ' ', $itemHtml);
         }
+        
         $this->parser->setHtml($html);
         $this->saveDataInStorage($url);
         $url_ = $this->getDomainFromUrl($url);
@@ -130,6 +133,28 @@ class ReaderManager implements ReaderManagerInterface
             || ($this->maxDeep > 0 && $this->maxDeep <= $this->readerStorage->getCurrentDeep())
             || ($this->maxPages > 0 && $this->maxPages <= $this->readerStorage->getSavedLength())
         );
+    }
+
+    public function isNoHrefSubDomain(): bool
+    {
+        return $this->isNoHrefSubDomain;
+    }
+
+    public function setIsNoHrefSubDomain(bool $isNoHrefSubDomain): ReaderManager
+    {
+        $this->isNoHrefSubDomain = $isNoHrefSubDomain;
+        return $this;
+    }
+
+    public function isNoImageSubDomain(): bool
+    {
+        return $this->isNoImageSubDomain;
+    }
+
+    public function setIsNoImageSubDomain(bool $isNoImageSubDomain): self
+    {
+        $this->isNoImageSubDomain = $isNoImageSubDomain;
+        return $this;
     }
 }
 

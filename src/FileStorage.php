@@ -2,13 +2,15 @@
 
 namespace Sip\ReaderManager;
 
-class FileStorage extends AbstractStorage
+use Sip\ReaderManager\Interfaces\ReaderFilterStorageInterface;
+
+class FileStorage extends AbstractStorage implements ReaderFilterStorageInterface
 {
-    protected string $storagePath =  __DIR__.'/../storage/';
+    protected string $storagePath = '';
 
     public function __construct(string $name)
     {
-        $this->storagePath .=$name;
+        $this->storagePath = $this->getStorageDirectory(). $name;
         if (!file_exists($this->storagePath)) {
            $this->save();
         } else {
@@ -19,6 +21,10 @@ class FileStorage extends AbstractStorage
         }
     }
 
+    public function getStorageDirectory(): string
+    {
+        return  __DIR__.'/../storage/';
+    }
 
     public function save(): self
     {

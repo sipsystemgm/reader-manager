@@ -4,8 +4,6 @@ namespace Sip\ReaderManager\Interfaces;
 
 interface ReaderStorageInterface
 {
-    public function __construct(string $name);
-
     public function saveLength(): self;
 
     public function getSavedLength(): int;

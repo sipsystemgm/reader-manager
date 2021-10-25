@@ -1,3 +1,9 @@
+2.1.1
+
+* feature [ReaderStorageInterface] seperated to ReaderFilterStorageInterface and ReadCacheInterface
+* change [AbstractStorage] constructor was moved to FileStorage
+* change [FileStorage] was implemented functions ReaderFilterStorageInterface
+
 1.5.2
 
 * change [ReaderManager::run] was added loop index end pass it to user function

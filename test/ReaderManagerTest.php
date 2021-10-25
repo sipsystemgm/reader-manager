@@ -11,7 +11,7 @@ use Sip\ReaderManager\FileStorage;
 
 /*
  * Attention!!!
- * Run webserver before run this tests.
+ * Run webserver before run in directory test/data
  * php -S localhost:8156
  */
 class ReaderManagerTest extends TestCase

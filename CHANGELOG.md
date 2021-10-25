@@ -1,3 +1,7 @@
+1.5.2
+
+* change [ReaderManager::run] was added loop index end pass it to user function
+
 1.5.1
 
 * change [ReaderManager] user function was moved inside loop in run method and renamed

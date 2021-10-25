@@ -54,10 +54,10 @@ class ReaderManager implements ReaderManagerInterface
         $url_ = $this->getDomainFromUrl($url);
         $deep = $this->deep;
 
-        foreach ($this->parser->getLinks() as $url) {
+        foreach ($this->parser->getLinks() as $index => $url) {
             $url = $this->cleanUrl($url, $url_);
             if (!empty($options['read']) && is_callable($options['read'])) {
-                if (!$options['read']($this->parser, $this, $url)) {
+                if (!$options['read']($this->parser, $this, $url, $index)) {
                     break;
                 }
             } else {

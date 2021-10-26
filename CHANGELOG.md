@@ -1,3 +1,7 @@
+2.2.2
+
+* change [composer.json] added php version
+
 2.2.1
 
 * feature [AbstractFactoryInterface, ReaderManagerInterface] was added parameters to test subdomain

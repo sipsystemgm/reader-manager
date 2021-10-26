@@ -16,6 +16,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
+        "php": ">=7.2.5",
         "sipsystemgm/image-parser": "^1.2",
         "sipsystemgm/reader": "^1.1"
     },
